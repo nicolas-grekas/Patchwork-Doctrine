@@ -288,7 +288,7 @@ abstract class agent_pForm_entity extends agent_pForm
     function filterPersistentCollection($o)
     {
         if (is_object($o->VALUE))
-            $o = (object) $this->getEntityData($o->VALUE);
+            $o = (object)$this->getEntityData($o->VALUE);
 
         return $o;
     }
