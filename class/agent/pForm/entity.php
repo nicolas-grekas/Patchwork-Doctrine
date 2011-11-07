@@ -13,7 +13,7 @@
 
 abstract class agent_pForm_entity extends agent_pForm
 {
-    public $get = array('__1__:i:1' => 0);
+    public $get = array ('__1__:i:1' => 0);
 
     static protected $entityNs = 'Entities';
 
@@ -23,7 +23,7 @@ abstract class agent_pForm_entity extends agent_pForm
     $entityClass,
     $entity,
     $entityIsNew = false,
-    $entityIdentifier = array();
+    $entityIdentifier = array ();
 
 
     function control()
@@ -123,9 +123,9 @@ abstract class agent_pForm_entity extends agent_pForm
      *
      * @return object $data
      */
-    protected function getEntityData($entity = null)
+    protected function getEntityData($entity = null, $stringifyDates = true)
     {
-        $data = array();
+        $data = array ();
 
         $entity || $entity = $this->entity;
 
@@ -139,7 +139,7 @@ abstract class agent_pForm_entity extends agent_pForm
             {
                 $data[$p] = $entity->$getProp();
 
-                if ($data[$p] instanceof DateTime)
+                if ($stringifyDates && $data[$p] instanceof DateTime)
                 {
                     $data[$p . '_timestamp'] = $data[$p]->format('U');
                     $data[$p] = $data[$p]->format('c');
@@ -155,8 +155,9 @@ abstract class agent_pForm_entity extends agent_pForm
      *
      * @param array $data
      */
-    protected function setEntityData($data)
+    protected function setEntityData($data, $entity = null)
     {
+        if (!$entity) $entity = $this->entity;
         $meta = $this->getEntityMetadata($this->entityClass);
         $id = $meta->getIdentifierFieldNames();
 
@@ -166,21 +167,23 @@ abstract class agent_pForm_entity extends agent_pForm
             if (method_exists($meta->customRepositoryClassName, $repoSetter))
             {
                 $repo = EM()->getRepository($meta->name);
-                $repo->$repoSetter($this->entity, $v);
+                $repo->$repoSetter($entity, $v);
             }
             else if (in_array($f, $meta->fieldNames) && !in_array($f, $id))
             {
                 $setter = 'set' . Doctrine\Common\Util\Inflector::classify($f);
-                $this->entity->$setter($v);
+                $entity->$setter($v);
             }
             else if (isset($meta->associationMappings[$f]))
             {
                 $v || $v = null;
 
                 $setter = 'set' . Doctrine\Common\Util\Inflector::classify($f);
-                $this->entity->$setter($v);
+                $entity->$setter($v);
             }
         }
+
+        return $entity;
     }
 
     protected function getRepository()
@@ -234,7 +237,7 @@ abstract class agent_pForm_entity extends agent_pForm
      */
     public function loadCollectionLoop($o, $entity, $collection)
     {
-        $data = array();
+        $data = array ();
 
         $filter = 'filterPersistentCollection';
 
@@ -252,12 +255,12 @@ abstract class agent_pForm_entity extends agent_pForm
             if (method_exists($meta->customRepositoryClassName, $repoGetColl))
             {
                 $repo = EM()->getRepository($meta->name);
-                $coll = call_user_func_array(array($repo, $repoGetColl), $params);
+                $coll = call_user_func_array(array ($repo, $repoGetColl), $params);
                 $data = $coll->toArray();
             }
             else if (method_exists($entity, $getColl))
             {
-                $coll = call_user_func_array(array($entity, $getColl), $params);
+                $coll = call_user_func_array(array ($entity, $getColl), $params);
                 $data = $coll->toArray();
             }
             else
@@ -275,7 +278,7 @@ abstract class agent_pForm_entity extends agent_pForm
             }
         }
 
-        $o->{$collection} = new loop_array($data, array($this, $filter));
+        $o->{$collection} = new loop_array($data, array ($this, $filter));
 
         return $o;
     }
