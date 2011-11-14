@@ -17,14 +17,11 @@ abstract class agent_pForm_entity extends agent_pForm
 
     static protected $entityNs = 'Entities';
 
-    protected
-
-    $entityUrl,
-    $entityClass,
-    $entity,
-    $entityIsNew = false,
-    $entityIdentifier = array ();
-
+    protected $entityUrl;
+    protected $entityClass;
+    protected $entity;
+    protected $entityIsNew = false;
+    protected $entityIdentifier = array ();
 
     function control()
     {
