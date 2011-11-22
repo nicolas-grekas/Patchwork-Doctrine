@@ -1,4 +1,6 @@
-<?php /****************** vi: set fenc=utf-8 ts=4 sw=4 et: *****************
+<?php
+
+/****************** vi: set fenc=utf-8 ts=4 sw=4 et: *****************
  *
  *   Copyright : (C) 2011 Nicolas Grekas. All rights reserved.
  *   Email     : p@tchwork.org
@@ -13,6 +15,7 @@
 
 abstract class agent_pForm_entity extends agent_pForm
 {
+
     public $get = array ('__1__:i:1' => 0);
 
     static protected $entityNs = 'Entities';
@@ -44,7 +47,10 @@ abstract class agent_pForm_entity extends agent_pForm
 
         $this->entityClass = self::$entityNs . "\\";
 
-        foreach ($u as $u) $this->entityClass .= ucfirst($u); //TODO: Ugly
+        foreach ($u as $u)
+        {
+            $this->entityClass .= ucfirst($u);
+        } //TODO: Ugly
 
         if ($this->entityIsNew)
         {
@@ -80,7 +86,10 @@ abstract class agent_pForm_entity extends agent_pForm
             if (!$this->entityIsNew)
             {
                 $this->data += $this->getEntityData();
-                foreach ($this->data as $k => $v) $o->$k = $v;
+                foreach ($this->data as $k => $v)
+                {
+                    $o->$k = $v;
+                }
             }
 
             if ($this instanceof agent_pForm_entity_indexable)
@@ -299,7 +308,10 @@ abstract class agent_pForm_entity extends agent_pForm
 
         if (isset($o[0]))
         {
-            foreach ($o[0] as $k => $v) $o[$k] = $v;
+            foreach ($o[0] as $k => $v)
+            {
+                $o[$k] = $v;
+            }
             unset($o[0]);
         }
 
@@ -347,6 +359,7 @@ abstract class agent_pForm_entity extends agent_pForm
 
 interface agent_pForm_entity_indexable
 {
+
     function composeIndex($o);
 
     function composeEntity($o);
