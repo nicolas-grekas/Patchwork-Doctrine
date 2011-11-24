@@ -15,8 +15,9 @@
 
 abstract class agent_pForm_entity extends agent_pForm
 {
-
-    public $get = array ('__1__:i:1' => 0);
+    public $get = array (
+        '__1__:i:1' => 0
+    );
 
     static protected $entityNs = 'Entities';
 
@@ -32,25 +33,23 @@ abstract class agent_pForm_entity extends agent_pForm
 
         if ($this->entity) return;
 
-        if (empty($this->entityUrl))
+        $u = empty($this->entityUrl)
+            ? explode('_', substr(get_class($this), 6))
+            : explode('/', $this->entityUrl);
+
+        if ('new' === end($u))
         {
-            $u = explode('_', substr(get_class($this), 6));
-
-            if ('new' === end($u))
-            {
-                $this->entityIsNew = true;
-                array_pop($u);
-            }
-
-            $this->entityUrl = implode('/', $u);
+            $this->entityIsNew = true;
+            array_pop($u);
         }
 
+        $this->entityUrl = implode('/', $u);
         $this->entityClass = self::$entityNs . "\\";
 
         foreach ($u as $u)
         {
-            $this->entityClass .= ucfirst($u);
-        } //TODO: Ugly
+            $this->entityClass .= ucfirst($u); //TODO: Ugly
+        }
 
         if ($this->entityIsNew)
         {
@@ -65,14 +64,16 @@ abstract class agent_pForm_entity extends agent_pForm
 
             $this->entity = EM()->find($this->entityClass, $id);
 
-            $this->entity || patchwork::forbidden();
+            $this->entity || Patchwork::forbidden();
         }
-
         else if ($this instanceof agent_pForm_entity_indexable)
         {
             $this->template = $this->entityUrl . '/index';
         }
-        else patchwork::forbidden();
+        else
+        {
+            Patchwork::forbidden();
+        }
     }
 
     function compose($o)
