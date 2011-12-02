@@ -1,7 +1,6 @@
 <?php
 
-/****************** vi: set fenc=utf-8 ts=4 sw=4 et: *****************
- *
+/*
  *   Copyright : (C) 2011 Nicolas Grekas. All rights reserved.
  *   Email     : p@tchwork.org
  *   License   : http://www.gnu.org/licenses/agpl.txt GNU/AGPL
@@ -10,8 +9,7 @@
  *   it under the terms of the GNU Affero General Public License as
  *   published by the Free Software Foundation, either version 3 of the
  *   License, or (at your option) any later version.
- *
- ***************************************************************************/
+ */
 
 abstract class agent_pForm_entity extends agent_pForm
 {
@@ -26,6 +24,16 @@ abstract class agent_pForm_entity extends agent_pForm
     protected $entity;
     protected $entityIsNew = false;
     protected $entityIdentifier = array ();
+
+    protected function getRepository()
+    {
+        return EM()->getRepository($this->entityClass);
+    }
+
+    public static function getEntityMetadata($entityClass)
+    {
+        return EM()->getClassMetadata($entityClass);
+    }
 
     function control()
     {
@@ -76,6 +84,142 @@ abstract class agent_pForm_entity extends agent_pForm
         }
     }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Entity data
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected function getEntityData($entity = null, $stringify_dates = true)
+    {
+        $entity || $entity = $this->entity;
+
+        return self::getEntityDataService($entity, $stringify_dates);
+    }
+
+    public static function getEntityDataService($entity, $stringify_dates = true)
+    {
+        if (!$entity) throw new Exception('Null entity supplied.');
+
+        $data = array ();
+
+        $p = self::getEntityMetadata(get_class($entity))->getColumnNames();
+
+        foreach ($p as $p)
+        {
+            $getProp = 'get' . Doctrine\Common\Util\Inflector::classify($p);
+
+            if (method_exists($entity, $getProp))
+            {
+                $data[$p] = $entity->$getProp();
+
+                if ($stringify_dates && $data[$p] instanceof DateTime)
+                {
+                    $data[$p . '_timestamp'] = $data[$p]->format('U');
+                    $data[$p] = $data[$p]->format('c');
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    protected function setEntityData($data, $entity = null)
+    {
+        if (!$entity) $entity = $this->entity;
+
+        return self::setEntityDataService($data, $entity);
+    }
+
+    public static function setEntityDataService($data, $entity)
+    {
+        if (!$data) throw new Exception('Null data supplied.');
+        if (!$entity) throw new Exception('Null entity supplied.');
+
+        $meta = self::getEntityMetadata(get_class($entity));
+        $id = $meta->getIdentifierFieldNames();
+        foreach ($data as $f => $v)
+        {
+            $repoSetter = 'setEntity' . Doctrine\Common\Util\Inflector::classify($f);
+            if (method_exists($meta->customRepositoryClassName, $repoSetter))
+            {
+                $repo = EM()->getRepository($meta->name);
+                $repo->$repoSetter($entity, $v);
+            }
+            else if (in_array($f, $meta->fieldNames) && !in_array($f, $id))
+            {
+                $setter = 'set' . Doctrine\Common\Util\Inflector::classify($f);
+                $entity->$setter($v);
+            }
+            else if (isset($meta->associationMappings[$f]))
+            {
+                $v || $v = null;
+
+                $setter = 'set' . Doctrine\Common\Util\Inflector::classify($f);
+                $entity->$setter($v);
+            }
+        }
+
+        return $entity;
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Save & load
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected function save($data)
+    {
+        $this->setEntityData($data);
+        $this->entityIsNew && EM()->persist($this->entity);
+        EM()->flush();
+
+        $id = self::getEntityMetadata($this->entityClass);
+        $id = $id->getSingleIdentifierFieldName();
+        $id = 'get' . Doctrine\Common\Util\Inflector::classify($id);
+
+        return $this->entityUrl . '/' . $this->entity->$id();
+    }
+
+    public static function persist($data, $entity, $flush = true)
+    {
+        if (!$data) throw new Exception('Null data supplied.');
+        if (!$entity) throw new Exception('Null entity supplied.');
+
+        EM()->persist(self::setEntityDataService($data, $entity));
+        if ($flush) EM()->flush();
+
+        return $entity;
+    }
+
+    public function loadEntity($o, $entity, $prefix)
+    {
+        if ($entity)
+        {
+            $meta = self::getEntityMetadata(get_class($entity));
+
+            $data = $this->getEntityData($entity);
+
+            foreach ($data as $k => $v)
+            {
+                if (0 === strpos($k, $prefix . '_'))
+                {
+                    $k = substr($k, strlen($prefix) + 1);
+                }
+
+                $o->{"{$prefix}_{$k}"} = $v;
+            }
+
+            if (!$meta->isIdentifierComposite)
+            {
+                $o->{$prefix} = $this->data[$prefix] = $data[$meta->getSingleIdentifierColumnName()];
+            }
+        }
+
+        return $o;
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Compose & filters
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     function compose($o)
     {
         if (empty($this->entity))
@@ -102,146 +246,6 @@ abstract class agent_pForm_entity extends agent_pForm
         }
     }
 
-    protected function save($data)
-    {
-        $this->setEntityData($data);
-        $this->entityIsNew && EM()->persist($this->entity);
-        EM()->flush();
-
-        $id = $this->getEntityMetadata($this->entityClass);
-        $id = $id->getSingleIdentifierFieldName();
-        $id = 'get' . Doctrine\Common\Util\Inflector::classify($id);
-
-        return $this->entityUrl . '/' . $this->entity->$id();
-    }
-
-    /**
-     * Return the ClassMetadata of an Entity
-     *
-     * @return ClassMetadata
-     */
-    protected function getEntityMetadata($entityClass)
-    {
-        return EM()->getClassMetadata($entityClass);
-    }
-
-    /**
-     * Return an array of the entity's values
-     *
-     * @return object $data
-     */
-    protected function getEntityData($entity = null, $stringifyDates = true)
-    {
-        $data = array ();
-
-        $entity || $entity = $this->entity;
-
-        $p = $this->getEntityMetadata(get_class($entity))->getColumnNames();
-
-        foreach ($p as $p)
-        {
-            $getProp = 'get' . Doctrine\Common\Util\Inflector::classify($p);
-
-            if (method_exists($entity, $getProp))
-            {
-                $data[$p] = $entity->$getProp();
-
-                if ($stringifyDates && $data[$p] instanceof DateTime)
-                {
-                    $data[$p . '_timestamp'] = $data[$p]->format('U');
-                    $data[$p] = $data[$p]->format('c');
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Inject data with entity's setters
-     *
-     * @param array $data
-     */
-    protected function setEntityData($data, $entity = null)
-    {
-        if (!$entity) $entity = $this->entity;
-        $meta = $this->getEntityMetadata($this->entityClass);
-        $id = $meta->getIdentifierFieldNames();
-
-        foreach ($data as $f => $v)
-        {
-            $repoSetter = 'setEntity' . Doctrine\Common\Util\Inflector::classify($f);
-            if (method_exists($meta->customRepositoryClassName, $repoSetter))
-            {
-                $repo = EM()->getRepository($meta->name);
-                $repo->$repoSetter($entity, $v);
-            }
-            else if (in_array($f, $meta->fieldNames) && !in_array($f, $id))
-            {
-                $setter = 'set' . Doctrine\Common\Util\Inflector::classify($f);
-                $entity->$setter($v);
-            }
-            else if (isset($meta->associationMappings[$f]))
-            {
-                $v || $v = null;
-
-                $setter = 'set' . Doctrine\Common\Util\Inflector::classify($f);
-                $entity->$setter($v);
-            }
-        }
-
-        return $entity;
-    }
-
-    protected function getRepository()
-    {
-        return EM()->getRepository($this->entityClass);
-    }
-
-    /**
-     * Load an entity in the agent
-     *
-     * @param object $o
-     * @param object $entity
-     * @param string $prefix The prefix of the entity
-     * @return $o
-     */
-    public function loadEntity($o, $entity, $prefix)
-    {
-        if ($entity)
-        {
-            $meta = $this->getEntityMetadata(get_class($entity));
-
-            $data = $this->getEntityData($entity);
-
-            foreach ($data as $k => $v)
-            {
-                if (0 === strpos($k, $prefix . '_'))
-                {
-                    $k = substr($k, strlen($prefix) + 1);
-                }
-
-                $o->{"{$prefix}_{$k}"} = $v;
-            }
-
-            if (!$meta->isIdentifierComposite)
-            {
-                $o->{$prefix} = $this->data[$prefix] = $data[$meta->getSingleIdentifierColumnName()];
-            }
-        }
-
-        return $o;
-    }
-
-    /**
-     * Load a collection loop in the agent
-     *
-     * @param object $o
-     * @param object $entity
-     * @param string $collection
-     * @param array  $params
-     * @return object $o
-     */
     public function loadCollectionLoop($o, $entity, $collection)
     {
         $data = array ();
@@ -250,7 +254,7 @@ abstract class agent_pForm_entity extends agent_pForm
 
         if ($entity)
         {
-            $meta = $this->getEntityMetadata(get_class($entity));
+            $meta = self::getEntityMetadata(get_class($entity));
 
             $params = func_get_args();
 
