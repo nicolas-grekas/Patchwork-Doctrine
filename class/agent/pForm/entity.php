@@ -131,7 +131,6 @@ abstract class agent_pForm_entity extends agent_pForm
 
     public static function setEntityDataService($data, $entity)
     {
-        if (!$data) throw new Exception('Null data supplied.');
         if (!$entity) throw new Exception('Null entity supplied.');
 
         $meta = self::getEntityMetadata(get_class($entity));
