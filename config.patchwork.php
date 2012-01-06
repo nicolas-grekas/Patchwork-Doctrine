@@ -8,7 +8,7 @@ $CONFIG += array(
         'password' => 'password',
         'host'     => 'localhost',
         'driver'   => 'pdo_mysql'
-			),
+	),
 */
     'doctrine.cache'       => '\Doctrine\Common\Cache\ArrayCache', // use ApcCache for production env
     'doctrine.mapping.dir' => 'data/mapping',
@@ -21,6 +21,9 @@ $CONFIG += array(
     'doctrine.event.listeners' => array(),
 );
 
+/**
+ * @return \Doctrine\ORM\EntityManager
+ */
 function EM()
 {
     return adapter_EM::connect($GLOBALS['CONFIG']['DSN']);
