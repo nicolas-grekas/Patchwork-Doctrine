@@ -245,6 +245,11 @@ abstract class agent_pForm_entity extends agent_pForm
         }
     }
 
+    public function loopify(\Doctrine\Common\Collections\ArrayCollection $collection)
+    {
+        return new loop_array($collection->toArray(), array ($this, 'filterArrayCollection'));
+    }
+
     public function loadCollectionLoop($o, $entity, $collection)
     {
         $data = array ();
