@@ -262,7 +262,7 @@ final class PersistentCollection implements Collection
         return array_udiff_assoc(
             $this->snapshot,
             $this->coll->toArray(),
-            function($a, $b) { return $a === $b ? 0 : 1; }
+            array(__CLASS__, 'strictDiffCompare')
         );
     }
 
@@ -277,8 +277,13 @@ final class PersistentCollection implements Collection
         return array_udiff_assoc(
             $this->coll->toArray(),
             $this->snapshot,
-            function($a, $b) { return $a === $b ? 0 : 1; }
+            array(__CLASS__, 'strictDiffCompare')
         );
+    }
+
+    protected static function strictDiffCompare($a, $b)
+    {
+        return $a === $b ? 0 : 1;
     }
 
     /**

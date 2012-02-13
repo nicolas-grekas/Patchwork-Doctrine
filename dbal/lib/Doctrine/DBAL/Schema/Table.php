@@ -481,8 +481,6 @@ class Table extends AbstractAsset
      */
     public function getColumns()
     {
-        $columns = $this->_columns;
-
         $pkCols = array();
         $fkCols = array();
 
@@ -493,11 +491,15 @@ class Table extends AbstractAsset
             /* @var $fk ForeignKeyConstraint */
             $fkCols = array_merge($fkCols, $fk->getColumns());
         }
-        $colNames = array_unique(array_merge($pkCols, $fkCols, array_keys($columns)));
 
-        uksort($columns, function($a, $b) use($colNames) {
-            return (array_search($a, $colNames) >= array_search($b, $colNames));
-        });
+        $columns = array();
+        $colNames = array_merge($pkCols, $fkCols, array_keys($this->_columns));
+
+        foreach ($colNames as $col) {
+            if (isset($this->_columns[$col])) {
+                $columns[$col] = $this->_columns[$col];
+            }
+        }
         return $columns;
     }
 

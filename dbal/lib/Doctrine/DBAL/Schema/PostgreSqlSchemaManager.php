@@ -44,7 +44,8 @@ class PostgreSqlSchemaManager extends AbstractSchemaManager
     public function getSchemaNames()
     {
         $rows = $this->_conn->fetchAll('SELECT schema_name FROM information_schema.schemata');
-        return array_map(function($v) { return $v['schema_name']; }, $rows);
+        foreach ($rows as &$v) $v = $v['schema_name'];
+        return $rows;
     }
 
     /**

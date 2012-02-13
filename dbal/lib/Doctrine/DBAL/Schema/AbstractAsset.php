@@ -196,9 +196,8 @@ abstract class AbstractAsset
      */
     protected function _generateIdentifierName($columnNames, $prefix='', $maxSize=30)
     {
-        $hash = implode("", array_map(function($column) {
-            return dechex(crc32($column));
-        }, $columnNames));
+        foreach ($columnNames as &$column) $column = dechex(crc32($column));
+        $hash = implode("", $columnNames);
         return substr(strtoupper($prefix . "_" . $hash), 0, $maxSize);
     }
 }
