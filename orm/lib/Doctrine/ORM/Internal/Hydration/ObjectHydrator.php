@@ -458,7 +458,7 @@ class ObjectHydrator extends AbstractHydrator
             } else {
                 // PATH C: Its a root result element
                 $this->_rootAliases[$dqlAlias] = true; // Mark as root alias
-                $entityKey = $this->_rsm->entityMappings[$dqlAlias] ?: 0;
+                $entityKey = $this->_rsm->entityMappings[$dqlAlias] or $entityKey = 0;
 
                 // if this row has a NULL value for the root result id then make it a null result.
                 if ( ! isset($nonemptyComponents[$dqlAlias]) ) {

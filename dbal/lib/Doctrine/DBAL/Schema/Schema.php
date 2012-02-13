@@ -82,7 +82,8 @@ class Schema extends AbstractAsset
             $schemaConfig = new SchemaConfig();
         }
         $this->_schemaConfig = $schemaConfig;
-        $this->_setName($schemaConfig->getName() ?: 'public');
+        $name = $schemaConfig->getName() or $name = 'public';
+        $this->_setName($name);
 
         foreach ($tables AS $table) {
             $this->_addTable($table);

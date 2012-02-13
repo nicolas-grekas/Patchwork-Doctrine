@@ -222,7 +222,8 @@ class EntityManager implements ObjectManager
             $this->flush();
             $this->conn->commit();
 
-            return $return ?: true;
+            if ($return) return $return;
+            else return true;
         } catch (Exception $e) {
             $this->close();
             $this->conn->rollback();
@@ -779,8 +780,9 @@ class EntityManager implements ObjectManager
 
         switch (true) {
             case (is_array($conn)):
+                $eventManager or $eventManager = new EventManager();
                 $conn = \Doctrine\DBAL\DriverManager::getConnection(
-                    $conn, $config, ($eventManager ?: new EventManager())
+                    $conn, $config, $eventManager
                 );
                 break;
 

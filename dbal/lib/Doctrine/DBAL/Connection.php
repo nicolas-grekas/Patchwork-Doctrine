@@ -651,7 +651,7 @@ class Connection implements DriverConnection
      */
     public function executeCacheQuery($query, $params, $types, QueryCacheProfile $qcp)
     {
-        $resultCache = $qcp->getResultCacheDriver() ?: $this->_config->getResultCacheImpl();
+        $resultCache = $qcp->getResultCacheDriver() or $resultCache = $this->_config->getResultCacheImpl();
         if (!$resultCache) {
             throw CacheException::noResultDriverConfigured();
         }
@@ -684,7 +684,7 @@ class Connection implements DriverConnection
     public function project($query, array $params, Closure $function)
     {
         $result = array();
-        $stmt = $this->executeQuery($query, $params ?: array());
+        $stmt = $this->executeQuery($query, (array) $params);
 
         while ($row = $stmt->fetch()) {
             $result[] = $function($row);

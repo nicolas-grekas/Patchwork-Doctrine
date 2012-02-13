@@ -162,7 +162,7 @@ class Setup
      */
     static public function createConfiguration($isDevMode = false, $proxyDir = null, Cache $cache = null)
     {
-        $proxyDir = $proxyDir ?: sys_get_temp_dir();
+        $proxyDir or $proxyDir = sys_get_temp_dir();
         if ($isDevMode === false && $cache === null) {
             if (extension_loaded('apc')) {
                 $cache = new \Doctrine\Common\Cache\ApcCache;

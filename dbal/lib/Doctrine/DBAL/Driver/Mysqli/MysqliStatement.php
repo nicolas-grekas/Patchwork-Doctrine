@@ -227,7 +227,7 @@ class MysqliStatement implements \IteratorAggregate, Statement
             throw new MysqliException($this->_stmt->error, $this->_stmt->errno);
         }
 
-        $fetchStyle = $fetchStyle ?: $this->_defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->_defaultFetchStyle;
 
         switch ($fetchStyle) {
             case PDO::FETCH_NUM:
@@ -251,7 +251,7 @@ class MysqliStatement implements \IteratorAggregate, Statement
      */
     public function fetchAll($fetchStyle = null)
     {
-        $fetchStyle = $fetchStyle ?: $this->_defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->_defaultFetchStyle;
 
         $a = array();
         while (($row = $this->fetch($fetchStyle)) !== null) {

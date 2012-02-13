@@ -1083,7 +1083,7 @@ class SqlWalker implements TreeWalker
                 $qComp     = $this->_queryComponents[$dqlAlias];
                 $class     = $qComp['metadata'];
 
-                $resultAlias = $selectExpression->fieldIdentificationVariable ?: $fieldName;
+                $resultAlias = $selectExpression->fieldIdentificationVariable or $resultAlias = $fieldName;
                 $tableName   = ($class->isInheritanceTypeJoined())
                     ? $this->_em->getUnitOfWork()->getEntityPersister($class->name)->getOwningTable($fieldName)
                     : $class->getTableName();
@@ -1123,7 +1123,7 @@ class SqlWalker implements TreeWalker
             case ($expr instanceof AST\GeneralCaseExpression):
             case ($expr instanceof AST\SimpleCaseExpression):
                 $columnAlias = $this->getSQLColumnAlias('sclr');
-                $resultAlias = $selectExpression->fieldIdentificationVariable ?: $this->_scalarResultCounter++;
+                $resultAlias = $selectExpression->fieldIdentificationVariable or $resultAlias = $this->_scalarResultCounter++;
 
                 $sql .= $expr->dispatch($this) . ' AS ' . $columnAlias;
 
@@ -1137,7 +1137,7 @@ class SqlWalker implements TreeWalker
 
             case ($expr instanceof AST\Subselect):
                 $columnAlias = $this->getSQLColumnAlias('sclr');
-                $resultAlias = $selectExpression->fieldIdentificationVariable ?: $this->_scalarResultCounter++;
+                $resultAlias = $selectExpression->fieldIdentificationVariable or $resultAlias = $this->_scalarResultCounter++;
 
                 $sql .= '(' . $this->walkSubselect($expr) . ') AS ' . $columnAlias;
 
@@ -1161,7 +1161,7 @@ class SqlWalker implements TreeWalker
 
                 $queryComp   = $this->_queryComponents[$dqlAlias];
                 $class       = $queryComp['metadata'];
-                $resultAlias = $selectExpression->fieldIdentificationVariable ?: null;
+                $resultAlias = $selectExpression->fieldIdentificationVariable or $resultAlias = null;
 
                 if ( ! isset($this->_selectedClasses[$dqlAlias])) {
                     $this->_selectedClasses[$dqlAlias] = array(
@@ -1345,13 +1345,13 @@ class SqlWalker implements TreeWalker
                 break;
 
             case ($expr instanceof AST\AggregateExpression):
-                $alias = $simpleSelectExpression->fieldIdentificationVariable ?: $this->_scalarResultCounter++;
+                $alias = $simpleSelectExpression->fieldIdentificationVariable or $alias = $this->_scalarResultCounter++;
 
                 $sql .= $this->walkAggregateExpression($expr) . ' AS dctrn__' . $alias;
                 break;
 
             case ($expr instanceof AST\Subselect):
-                $alias = $simpleSelectExpression->fieldIdentificationVariable ?: $this->_scalarResultCounter++;
+                $alias = $simpleSelectExpression->fieldIdentificationVariable or $alias = $this->_scalarResultCounter++;
 
                 $columnAlias = 'sclr' . $this->_aliasCounter++;
                 $this->_scalarResultAliasMap[$alias] = $columnAlias;
@@ -1369,7 +1369,7 @@ class SqlWalker implements TreeWalker
             case ($expr instanceof AST\CoalesceExpression):
             case ($expr instanceof AST\GeneralCaseExpression):
             case ($expr instanceof AST\SimpleCaseExpression):
-                $alias = $simpleSelectExpression->fieldIdentificationVariable ?: $this->_scalarResultCounter++;
+                $alias = $simpleSelectExpression->fieldIdentificationVariable or $alias = $this->_scalarResultCounter++;
 
                 $columnAlias = $this->getSQLColumnAlias('sclr');
                 $this->_scalarResultAliasMap[$alias] = $columnAlias;

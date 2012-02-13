@@ -167,7 +167,7 @@ class DB2Statement implements \IteratorAggregate, Statement
      */
     public function fetch($fetchStyle = null)
     {
-        $fetchStyle = $fetchStyle ?: $this->_defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->_defaultFetchStyle;
         switch ($fetchStyle) {
             case \PDO::FETCH_BOTH:
                 return db2_fetch_both($this->_stmt);
@@ -185,7 +185,7 @@ class DB2Statement implements \IteratorAggregate, Statement
      */
     public function fetchAll($fetchStyle = null)
     {
-        $fetchStyle = $fetchStyle ?: $this->_defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->_defaultFetchStyle;
         $rows = array();
         while ($row = $this->fetch($fetchStyle)) {
             $rows[] = $row;
@@ -210,6 +210,6 @@ class DB2Statement implements \IteratorAggregate, Statement
      */
     public function rowCount()
     {
-        return (@db2_num_rows($this->_stmt))?:0;
+        return (int)@db2_num_rows($this->_stmt);
     }
 }

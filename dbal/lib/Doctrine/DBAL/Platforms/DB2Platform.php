@@ -489,7 +489,7 @@ class DB2Platform extends AbstractPlatform
         }
 
         $limit = (int)$limit;
-        $offset = (int)(($offset)?:0);
+        $offset = (int)$offset;
 
         // Todo OVER() needs ORDER BY data!
         $sql = 'SELECT db22.* FROM (SELECT ROW_NUMBER() OVER() AS DC_ROWNUM, db21.* '.

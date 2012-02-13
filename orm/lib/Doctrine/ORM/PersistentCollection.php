@@ -132,7 +132,7 @@ final class PersistentCollection implements Collection
     {
         $this->owner            = $entity;
         $this->association      = $assoc;
-        $this->backRefFieldName = $assoc['inversedBy'] ?: $assoc['mappedBy'];
+        $this->backRefFieldName = $assoc['inversedBy'] or $this->backRefFieldName = $assoc['mappedBy'];
     }
 
     /**

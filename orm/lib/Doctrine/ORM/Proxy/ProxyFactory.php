@@ -123,7 +123,7 @@ class ProxyFactory
      */
     public function generateProxyClasses(array $classes, $toDir = null)
     {
-        $proxyDir = $toDir ?: $this->_proxyDir;
+        $proxyDir = $toDir ? $toDir : $this->_proxyDir;
         $proxyDir = rtrim($proxyDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         foreach ($classes as $class) {
             /* @var $class ClassMetadata */

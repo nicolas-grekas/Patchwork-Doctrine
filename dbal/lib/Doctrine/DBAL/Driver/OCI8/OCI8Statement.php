@@ -208,7 +208,7 @@ class OCI8Statement implements \IteratorAggregate, Statement
      */
     public function fetch($fetchStyle = null)
     {
-        $fetchStyle = $fetchStyle ?: $this->_defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->_defaultFetchStyle;
         if ( ! isset(self::$fetchStyleMap[$fetchStyle])) {
             throw new \InvalidArgumentException("Invalid fetch style: " . $fetchStyle);
         }
@@ -221,7 +221,7 @@ class OCI8Statement implements \IteratorAggregate, Statement
      */
     public function fetchAll($fetchStyle = null)
     {
-        $fetchStyle = $fetchStyle ?: $this->_defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->_defaultFetchStyle;
         if ( ! isset(self::$fetchStyleMap[$fetchStyle])) {
             throw new \InvalidArgumentException("Invalid fetch style: " . $fetchStyle);
         }

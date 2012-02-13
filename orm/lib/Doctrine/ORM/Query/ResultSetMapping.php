@@ -269,7 +269,7 @@ class ResultSetMapping
         // column name => alias of owner
         $this->columnOwnerMap[$columnName] = $alias;
         // field name => class name of declaring class
-        $this->declaringClasses[$columnName] = $declaringClass ?: $this->aliasMap[$alias];
+        $this->declaringClasses[$columnName] = $declaringClass ? $declaringClass : $this->aliasMap[$alias];
 
         if ( ! $this->isMixed && $this->scalarMappings) {
             $this->isMixed = true;
@@ -311,7 +311,7 @@ class ResultSetMapping
     public function addScalarResult($columnName, $alias, $type = null)
     {
         $this->scalarMappings[$columnName] = $alias;
-        $this->typeMappings[$columnName]   = $type ?: 'string';
+        $this->typeMappings[$columnName]   = $type ? $type : 'string';
 
         if ( ! $this->isMixed && $this->fieldMappings) {
             $this->isMixed = true;

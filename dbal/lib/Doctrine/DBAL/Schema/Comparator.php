@@ -332,8 +332,8 @@ class Comparator
 
         if ($column1->getType() instanceof \Doctrine\DBAL\Types\StringType) {
             // check if value of length is set at all, default value assumed otherwise.
-            $length1 = $column1->getLength() ?: 255;
-            $length2 = $column2->getLength() ?: 255;
+            $length1 = $column1->getLength() or $length1 = 255;
+            $length2 = $column2->getLength() or $length2 = 255;
             if ($length1 != $length2) {
                 $changedProperties[] = 'length';
             }
@@ -344,7 +344,9 @@ class Comparator
         }
 
         if ($column1->getType() instanceof \Doctrine\DBAL\Types\DecimalType) {
-            if (($column1->getPrecision()?:10) != ($column2->getPrecision()?:10)) {
+            $precision1 = $column1->getLength() or $precision1 = 10;
+            $precision2 = $column2->getLength() or $precision2 = 10;
+            if ($precision1 != $precision2) {
                 $changedProperties[] = 'precision';
             }
             if ($column1->getScale() != $column2->getScale()) {
