@@ -11,16 +11,32 @@
  *
  ***************************************************************************/
 
-namespace Doctrine\DBAL\Driver\PDOMySql;
-
-class Driver extends self
+class adapter_DB
 {
-    public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
+    protected static $db = array();
+
+    static function connect($dsn)
     {
-        $conn = parent::connect($params, $username, $password, $driverOptions);
+        $db = md5(implode(';', $dsn));
 
-        $conn->exec("SET NAMES utf8 COLLATE utf8_general_ci");
+        if (isset(self::$db[$db])) return self::$db[$db];
 
-        return $conn;
+        $db =& self::$db[$db];
+        $db = \Doctrine\DBAL\DriverManager::getConnection($dsn);
+        $db->setCharset('utf8');
+
+        return $db;
+    }
+
+    static function disconnect($db)
+    {
+        $db->close();
+    }
+
+    static function __free()
+    {
+        foreach (self::$db as $db) self::disconnect($db);
+
+        self::$db = array();
     }
 }

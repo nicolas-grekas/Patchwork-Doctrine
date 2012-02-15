@@ -1,0 +1,30 @@
+<?php // vi: set fenc=utf-8 ts=4 sw=4 et:
+
+$CONFIG += array(
+/*
+    'DSN' => array(
+        'dbname'   => 'database',
+        'user'     => 'user',
+        'password' => 'password',
+        'host'     => 'localhost',
+        'driver'   => 'pdo_mysql'
+	),
+*/
+    'doctrine.cache'       => '\Doctrine\Common\Cache\ArrayCache', // use ApcCache for production env
+    'doctrine.mapping.dir' => 'data/mapping',
+    'doctrine.entities.dir' => 'Entity',
+    'doctrine.proxy.dir'    => 'Proxy',
+    'doctrine.proxy.dir'    => 'class/Proxies',
+    'doctrine.proxy.generate'  => true, // set to false to production env
+    'doctrine.dbal.logger'     => '',
+    'doctrine.event'           => false,
+    'doctrine.event.listeners' => array(),
+);
+
+/**
+ * @return \Doctrine\ORM\EntityManager
+ */
+function EM()
+{
+    return adapter_EM::connect($GLOBALS['CONFIG']['DSN']);
+}

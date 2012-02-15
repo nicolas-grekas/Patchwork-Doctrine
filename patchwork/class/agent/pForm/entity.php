@@ -13,7 +13,7 @@
 
 abstract class agent_pForm_entity extends agent_pForm
 {
-    public $get = array (
+    public $get = array(
         '__1__:i:1' => 0
     );
 
@@ -23,7 +23,7 @@ abstract class agent_pForm_entity extends agent_pForm
     protected $entityClass;
     protected $entity;
     protected $entityIsNew = false;
-    protected $entityIdentifier = array ();
+    protected $entityIdentifier = array();
 
     protected function getRepository()
     {
@@ -84,9 +84,9 @@ abstract class agent_pForm_entity extends agent_pForm
         }
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Entity data
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
     protected function getEntityData($entity = null, $stringify_dates = true)
     {
@@ -99,7 +99,7 @@ abstract class agent_pForm_entity extends agent_pForm
     {
         if (!$entity) throw new Exception('Null entity supplied.');
 
-        $data = array ();
+        $data = array();
 
         $p = self::getEntityMetadata(get_class($entity))->getColumnNames();
 
@@ -160,9 +160,9 @@ abstract class agent_pForm_entity extends agent_pForm
         return $entity;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Save & load
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
     protected function save($data)
     {
@@ -215,9 +215,9 @@ abstract class agent_pForm_entity extends agent_pForm
         return $o;
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // Compose & filters
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
     function compose($o)
     {
@@ -247,12 +247,12 @@ abstract class agent_pForm_entity extends agent_pForm
 
     public function loopify(\Doctrine\Common\Collections\ArrayCollection $collection)
     {
-        return new loop_array($collection->toArray(), array ($this, 'filterArrayCollection'));
+        return new loop_array($collection->toArray(), array($this, 'filterArrayCollection'));
     }
 
     public function loadCollectionLoop($o, $entity, $collection)
     {
-        $data = array ();
+        $data = array();
 
         $filter = 'filterPersistentCollection';
 
@@ -270,12 +270,12 @@ abstract class agent_pForm_entity extends agent_pForm
             if (method_exists($meta->customRepositoryClassName, $repoGetColl))
             {
                 $repo = EM()->getRepository($meta->name);
-                $coll = call_user_func_array(array ($repo, $repoGetColl), $params);
+                $coll = call_user_func_array(array($repo, $repoGetColl), $params);
                 $data = $coll->toArray();
             }
             else if (method_exists($entity, $getColl))
             {
-                $coll = call_user_func_array(array ($entity, $getColl), $params);
+                $coll = call_user_func_array(array($entity, $getColl), $params);
                 $data = $coll->toArray();
             }
             else
@@ -293,7 +293,7 @@ abstract class agent_pForm_entity extends agent_pForm
             }
         }
 
-        $o->{$collection} = new loop_array($data, array ($this, $filter));
+        $o->{$collection} = new loop_array($data, array($this, $filter));
 
         return $o;
     }
@@ -306,7 +306,7 @@ abstract class agent_pForm_entity extends agent_pForm
     function filterPersistentCollection($o)
     {
         if (is_object($o->VALUE))
-            $o = (object)$this->getEntityData($o->VALUE);
+            $o = (object) $this->getEntityData($o->VALUE);
 
         return $o;
     }
@@ -341,7 +341,7 @@ abstract class agent_pForm_entity extends agent_pForm
             }
         }
 
-        $o = (object)$o;
+        $o = (object) $o;
 
         return $this->filterDateTime($o);
     }

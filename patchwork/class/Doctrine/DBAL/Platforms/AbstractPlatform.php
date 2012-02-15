@@ -11,50 +11,34 @@
  *
  ***************************************************************************/
 
-namespace Doctrine\DBAL;
+namespace Doctrine\DBAL\Platforms;
 
-class Connection extends self
+abstract class AbstractPlatform extends self
 {
-    public function delete($tableName, array $identifier)
+    /**
+     * Quotes its arguments as identifiers.
+     *
+     * @return array quoted arguments
+     */
+    public function quoteArgsAsIdentifiers()
     {
-        list($tableName, $identifier) = $this->quoteArgsAsIdentifiers($tableName, $identifier);
+        static $quoteChar;
+        isset($quoteChar) or $quoteChar = substr($this->quoteSingleIdentifier(''), 0, 1);
 
-        return parent::delete($tableName, $identifier);
-    }
-
-    public function update($tableName, array $data, array $identifier)
-    {
-        list($tableName, $data, $identifier) = $this->quoteArgsAsIdentifiers($tableName, $data, $identifier);
-
-        return parent::update($tableName, $data, $identifier);
-    }
-
-    public function insert($tableName, array $data)
-    {
-        list($tableName, $data) = $this->quoteArgsAsIdentifiers($tableName, $data);
-
-        return parent::insert($tableName, $data);
-    }
-
-
-    protected function quoteArgsAsIdentifiers()
-    {
         $a = func_get_args();
-        $c = $this->quoteIdentifier('');
 
         foreach ($a as &$data)
         {
             if (is_string($data))
             {
-                if ('' === $data || $c[0] !== $data[0])
-                    $data = $this->quoteIdentifier($data);
+                if (isset($data[0]) && $quoteChar !== $data[0]) $data = $this->quoteIdentifier($data);
             }
             else
             {
                 $quotedData = array();
                 foreach ($data as $k => $v)
                 {
-                    list($k) = $this->quoteArgsAsIdentifiers($k);
+                    if (isset($k[0]) && $quoteChar !== $k[0]) $k = $this->quoteIdentifier($k);
                     $quotedData[$k] = $v;
                 }
                 $data = $quotedData;
