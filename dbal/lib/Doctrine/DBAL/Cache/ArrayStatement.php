@@ -62,7 +62,7 @@ class ArrayStatement implements \IteratorAggregate, ResultStatement
     {
         if (isset($this->data[$this->num])) {
             $row = $this->data[$this->num++];
-            $fetchStyle = $fetchStyle ?: $this->defaultFetchStyle;
+            $fetchStyle or $fetchStyle = $this->defaultFetchStyle;
             if ($fetchStyle === PDO::FETCH_ASSOC) {
                 return $row;
             } else if ($fetchStyle === PDO::FETCH_NUM) {

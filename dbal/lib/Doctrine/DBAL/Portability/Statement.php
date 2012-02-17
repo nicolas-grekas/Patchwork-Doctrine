@@ -114,7 +114,7 @@ class Statement implements \IteratorAggregate, \Doctrine\DBAL\Driver\Statement
 
     public function fetch($fetchStyle = null)
     {
-        $fetchStyle = $fetchStyle ?: $this->defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->defaultFetchStyle;
 
         $row = $this->stmt->fetch($fetchStyle);
 
@@ -128,7 +128,7 @@ class Statement implements \IteratorAggregate, \Doctrine\DBAL\Driver\Statement
 
     public function fetchAll($fetchStyle = null, $columnIndex = 0)
     {
-        $fetchStyle = $fetchStyle ?: $this->defaultFetchStyle;
+        $fetchStyle or $fetchStyle = $this->defaultFetchStyle;
 
         if ($columnIndex != 0) {
             $rows = $this->stmt->fetchAll($fetchStyle, $columnIndex);

@@ -180,7 +180,7 @@ class ResultCacheStatement implements \IteratorAggregate, ResultStatement
         if ($row) {
             $this->data[] = $row;
 
-            $fetchStyle = $fetchStyle ?: $this->defaultFetchStyle;
+            $fetchStyle or $fetchStyle = $this->defaultFetchStyle;
 
             if ($fetchStyle == PDO::FETCH_ASSOC) {
                 return $row;
