@@ -11,17 +11,17 @@
  *
  ***************************************************************************/
 
-class adapter_EM
+class adapter_EM extends adapter_DB
 {
     protected static $em = array();
 
     static function connect($dsn)
     {
-        $hash = md5(serialize($dsn));
+        empty($dsn) or $dsn = self::getDefaultDsn();
+        $h = md5(serialize($dsn), true);
+        if (isset(self::$em[$h])) return self::$em[$h];
 
-        if (isset(self::$em[$hash])) return self::$em[$hash];
-
-        return self::$em[$hash] = \Doctrine\ORM\EntityManager::create(
+        return self::$em[$h] = \Doctrine\ORM\EntityManager::create(
             DB($dsn),
             self::createConfiguration($dsn)
         );

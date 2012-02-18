@@ -17,11 +17,10 @@ class adapter_DB
 
     static function connect($dsn)
     {
-        $db = md5(serialize(';', $dsn));
+        empty($dsn) or $dsn = self::getDefaultDsn();
+        $h = md5(serialize($dsn), true);
+        if (isset(self::$db[$h])) return self::$db[$h];
 
-        if (isset(self::$db[$db])) return self::$db[$db];
-
-        $db =& self::$db[$db];
         $db = \Doctrine\DBAL\DriverManager::getConnection(
             $dsn,
             self::createConfiguration($dsn),
@@ -30,7 +29,22 @@ class adapter_DB
         $db->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         $db->setCharset('utf8');
 
-        return $db;
+        return self::$db[$h] = $db;
+    }
+
+    protected static function getDefaultDsn()
+    {
+        static $defaultDsn;
+
+        isset($defaultDsn) or $defaultDsn = array(
+            'driver' => $CONFIG['doctrine.pdo_mysql'],
+            'host' => $CONFIG['doctrine.host'],
+            'dbname' => $CONFIG['doctrine.dbname'],
+            'user' => $CONFIG['doctrine.user'],
+            'password' => $CONFIG['doctrine.password'],
+        );
+
+        return $defaultDsn;
     }
 
     protected static function createConfiguration($dsn)
