@@ -15,9 +15,9 @@ class pForm_date extends self
 {
     protected $getDateTimeFromString = true;
 
-    function init(&$param)
+    protected function init(&$param)
     {
-        isset($param['getDateTimeFromString']) and $this->getDateTimeFromString = $param['getDateTimeFromString'];
+        $this->getDateTimeFromString = !empty($param['getDateTimeFromString']);
         parent::init($param);
     }
 

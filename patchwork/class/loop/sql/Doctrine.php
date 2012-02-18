@@ -25,8 +25,8 @@ class loop_sql_Doctrine extends loop
     function __construct($sql, $filter = '', $from = null, $count = null)
     {
         $this->sql = $sql;
-        $this->from = $from;
-        $this->count = $count;
+        $this->from = (int) $from;
+        $this->count = (int) $count;
         $this->addFilter($filter);
     }
 
@@ -41,9 +41,9 @@ class loop_sql_Doctrine extends loop
         $sql = $this->sql;
         $this->db || $this->db = DB();
 
-        if (!is_null($this->count))
+        if ($this->count)
         {
-            $this->db->modifyLimitQuery($sql, $this->count, $this->from);
+            $sql = $this->db->getDatabasePlatform()->modifyLimitQuery($sql, $this->count, $this->from);
         }
 
         $this->result = $this->db->query($sql);
