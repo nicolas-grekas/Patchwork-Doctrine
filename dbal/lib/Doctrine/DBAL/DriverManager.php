@@ -142,7 +142,7 @@ final class DriverManager
      *
      * @param array $params
      */
-    private static function _checkParams(array $params)
+    protected static function _checkParams(array $params)
     {
         // check existance of mandatory parameters
 

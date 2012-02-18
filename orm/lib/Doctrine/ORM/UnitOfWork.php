@@ -2868,7 +2868,7 @@ class UnitOfWork implements PropertyChangedListener
      * @param  object $obj
      * @return string
      */
-    private static function objToStr($obj)
+    protected static function objToStr($obj)
     {
         return method_exists($obj, '__toString') ? (string)$obj : get_class($obj).'@'.spl_object_hash($obj);
     }
