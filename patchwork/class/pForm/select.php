@@ -35,7 +35,7 @@ class pForm_select extends self
 
     function getDbValue()
     {
-        return  ($this->entityClass && $v = $this->getValue())
+        return ($this->entityClass && $v = $this->getValue())
             ? EM()->getReference($this->entityClass, $v)
             : parent::getDbValue();
     }

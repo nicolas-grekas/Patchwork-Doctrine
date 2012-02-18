@@ -23,7 +23,7 @@ abstract class AbstractPlatform extends self
     public function quoteArgsAsIdentifiers()
     {
         static $quoteChar;
-        isset($quoteChar) or $quoteChar = substr($this->quoteSingleIdentifier(''), 0, 1);
+        isset($quoteChar) or $quoteChar = substr($this->quoteSingleIdentifier('_'), 0, 1);
 
         $a = func_get_args();
 

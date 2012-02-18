@@ -17,25 +17,20 @@ class pForm_date extends self
 
     function init(&$param)
     {
-        if (isset($param['getDateTimeFromString']))
-            $this->getDateTimeFromString = $param['getDateTimeFromString'];
-
+        isset($param['getDateTimeFromString']) and $this->getDateTimeFromString = $param['getDateTimeFromString'];
         parent::init($param);
     }
 
     function setValue($value)
     {
-        if ($value instanceof DateTime) $value = $value->format('Y-m-d');
+        $value instanceof DateTime and $value = $value->format('Y-m-d');
         return parent::setValue($value);
     }
 
     function getDbValue()
     {
         $v = parent::getDbValue();
-
-        if ($this->getDateTimeFromString)
-            $v = $v ? new DateTime($v) : null;
-
+        $this->getDateTimeFromString and $v = $v ? new DateTime($v) : null;
         return $v;
     }
 }

@@ -17,48 +17,29 @@ class adapter_EM
 
     static function connect($dsn)
     {
-        $hash = md5(implode(';', $dsn));
+        $hash = md5(serialize($dsn));
 
         if (isset(self::$em[$hash])) return self::$em[$hash];
 
-        $config = new \Doctrine\ORM\Configuration;
+        return self::$em[$hash] = \Doctrine\ORM\EntityManager::create(
+            DB($dsn),
+            self::createConfiguration($dsn)
+        );
+    }
+
+    protected static function createConfiguration($dsn)
+    {
+        $conf = new \Doctrine\ORM\Configuration();
 
         $cache = new $CONFIG['doctrine.cache'];
 
-        $driver = $config->newDefaultAnnotationDriver(array($CONFIG['doctrine.entities.dir']));
+        $conf->setQueryCacheImpl($cache);
+        $conf->setMetadataCacheImpl($cache);
+        $conf->setMetadataDriverImpl($conf->newDefaultAnnotationDriver(array($CONFIG['doctrine.entities.dir'])));
+        $conf->setProxyDir($CONFIG['doctrine.proxy.dir']);
+        $conf->setAutoGenerateProxyClasses($CONFIG['doctrine.proxy.generate']);
+        $conf->setProxyNamespace($CONFIG['doctrine.proxy.namespace']);
 
-        $config->setMetadataCacheImpl($cache);
-        $config->setMetadataDriverImpl($driver);
-        $config->setQueryCacheImpl($cache);
-        $config->setProxyDir($CONFIG['doctrine.proxy.dir']);
-        $config->setAutoGenerateProxyClasses($CONFIG['doctrine.proxy.generate']);
-        $config->setProxyNamespace($CONFIG['doctrine.proxy.namespace']);
-
-        if (!empty($CONFIG['doctrine.dbal.logger']))
-        {
-            $config->setSQLLogger(new $CONFIG['doctrine.dbal.logger']);
-        }
-
-        $evm = null;
-
-        if ($CONFIG['doctrine.event'])
-        {
-            $evm = new \Doctrine\Common\EventManager();
-
-            if (!empty($CONFIG['doctrine.event.listeners']))
-            {
-                foreach ($CONFIG['doctrine.event.listeners'] as $listener)
-                {
-                    $evm->addEventSubscriber(new $listener());
-                }
-            }
-        }
-
-        self::$em[$hash] = \Doctrine\ORM\EntityManager::create($dsn, $config, $evm);
-
-        self::$em[$hash]->getConnection()->getDatabasePlatform()
-            ->registerDoctrineTypeMapping('enum', 'string');
-
-        return self::$em[$hash];
+        return $conf;
     }
 }

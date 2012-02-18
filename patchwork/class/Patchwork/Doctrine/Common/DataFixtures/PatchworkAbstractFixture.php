@@ -59,14 +59,12 @@ abstract class PatchworkAbstractFixture extends AbstractFixture
 
     public function setFKC($check)
     {
-        if ($check !== true && $check !== false)
+        if (!is_bool($check))
         {
-            throw new \Exception('true or false expected.');
+            throw new \Exception('Boolean expected');
         }
 
-        $check === true ? $check = 1 : $check = 0;
-
-        $this->em->getConnection()->prepare('SET FOREIGN_KEY_CHECKS = ' . $check . ';')->execute();
+        $this->em->getConnection()->exec('SET FOREIGN_KEY_CHECKS=' . (int) $check);
     }
 
     public function persistAll()

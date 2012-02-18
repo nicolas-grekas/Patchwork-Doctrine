@@ -1,23 +1,19 @@
 <?php // vi: set fenc=utf-8 ts=4 sw=4 et:
 
 $CONFIG += array(
-/*
-    'DSN' => array(
-        'dbname'   => 'database',
-        'user'     => 'user',
-        'password' => 'password',
-        'host'     => 'localhost',
-        'driver'   => 'pdo_mysql'
-	),
-*/
-    'doctrine.cache'       => '\Doctrine\Common\Cache\ArrayCache', // use ApcCache for production env
+//    'DSN' => array(
+//        'driver' => 'pdo_mysql',
+//        'host' => 'localhost',
+//        'dbname' => 'database',
+//        'user' => 'user',
+//        'password' => 'password',
+//    ),
+    'doctrine.cache' => 'Doctrine\Common\Cache\ArrayCache', // Use ApcCache for production env
     'doctrine.mapping.dir' => 'data/mapping',
-    'doctrine.entities.dir' => 'Entity',
-    'doctrine.proxy.dir'    => 'Proxy',
-    'doctrine.proxy.dir'    => 'class/Proxies',
-    'doctrine.proxy.generate'  => true, // set to false to production env
-    'doctrine.dbal.logger'     => '',
-    'doctrine.event'           => false,
+    'doctrine.entities.dir' => 'class/Entities',
+    'doctrine.proxy.dir' => 'class/Proxies',
+    'doctrine.proxy.generate' => true, // Set to false to production env
+//    'doctrine.dbal.logger' => 'Doctrine\DBAL\Logger\PatchworkSQLLogger',
     'doctrine.event.listeners' => array(),
 );
 

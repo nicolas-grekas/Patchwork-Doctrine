@@ -17,15 +17,47 @@ class adapter_DB
 
     static function connect($dsn)
     {
-        $db = md5(implode(';', $dsn));
+        $db = md5(serialize(';', $dsn));
 
         if (isset(self::$db[$db])) return self::$db[$db];
 
         $db =& self::$db[$db];
-        $db = \Doctrine\DBAL\DriverManager::getConnection($dsn);
+        $db = \Doctrine\DBAL\DriverManager::getConnection(
+            $dsn,
+            self::createConfiguration($dsn),
+            self::createEventManager($dsn)
+        );
+        $db->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
         $db->setCharset('utf8');
 
         return $db;
+    }
+
+    protected static function createConfiguration($dsn)
+    {
+        $conf = new \Doctrine\DBAL\Configuration();
+
+        if (!empty($CONFIG['doctrine.dbal.logger']))
+        {
+            $conf->setSQLLogger(new $CONFIG['doctrine.dbal.logger']);
+        }
+
+        return $conf;
+    }
+
+    protected static function createEventManager($dsn)
+    {
+        $evm = new \Doctrine\Common\EventManager();
+
+        if (!empty($CONFIG['doctrine.event.listeners']))
+        {
+            foreach ($CONFIG['doctrine.event.listeners'] as $listener)
+            {
+                $evm->addEventSubscriber(new $listener());
+            }
+        }
+
+        return $evm;
     }
 
     static function disconnect($db)

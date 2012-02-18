@@ -20,7 +20,7 @@ use Doctrine\DBAL\Logging\SQLLogger;
  */
 class PatchworkSQLLogger implements SQLLogger
 {
-    protected $queryInfo;
+    protected $queryInfo = array();
 
     /**
      * {@inheritdoc}
@@ -28,11 +28,14 @@ class PatchworkSQLLogger implements SQLLogger
     public function startQuery($sql, array $params = null, array $types = null)
     {
         $this->queryInfo = array(
-            'sql'    => $sql,
-            'params' => $params,
-            'types'  => $types,
-            'executionMS' => microtime(true),
+            'query' => $sql,
+            'time-ms' => 0,
         );
+
+        empty($params) or $this->queryInfo['params'] = $params;
+        empty($types) or $this->queryInfo['types'] = $types;
+
+        $this->queryInfo['time-ms'] = microtime(true);
     }
 
     /**
@@ -40,7 +43,7 @@ class PatchworkSQLLogger implements SQLLogger
      */
     public function stopQuery()
     {
-        $this->queryInfo['executionMS'] = (microtime(true) - $this->queryInfo['executionMS']) * 1000;
+        $this->queryInfo['time-ms'] = sprintf('.3f', (microtime(true) - $this->queryInfo['time-ms']) * 1000);
         \Patchwork::log('sql', $this->queryInfo);
         $this->queryInfo = array();
     }
