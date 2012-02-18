@@ -629,9 +629,9 @@ class Connection implements DriverConnection
 
         $this->connect();
 
-        $hasLogger = $this->_config->getSQLLogger() !== null;
-        if ($hasLogger) {
-            $this->_config->getSQLLogger()->startQuery($query, $params, $types);
+        $logger = $this->_config->getSQLLogger();
+        if ($logger) {
+            $logger->startQuery($query, $params, $types);
         }
 
         if ($params) {
@@ -650,8 +650,8 @@ class Connection implements DriverConnection
 
         $stmt->setFetchMode($this->_defaultFetchStyle);
 
-        if ($hasLogger) {
-            $this->_config->getSQLLogger()->stopQuery();
+        if ($logger) {
+            $logger->stopQuery();
         }
 
         return $stmt;
@@ -732,7 +732,7 @@ class Connection implements DriverConnection
 
         $args = func_get_args();
 
-        $logger = $this->getConfiguration()->getSQLLogger();
+        $logger = $this->_config->getSQLLogger();
         if ($logger) {
             $logger->startQuery($args[0]);
         }
@@ -763,9 +763,9 @@ class Connection implements DriverConnection
     {
         $this->connect();
 
-        $hasLogger = $this->_config->getSQLLogger() !== null;
-        if ($hasLogger) {
-            $this->_config->getSQLLogger()->startQuery($query, $params, $types);
+        $logger = $this->_config->getSQLLogger();
+        if ($logger) {
+            $logger->startQuery($query, $params, $types);
         }
 
         if ($params) {
@@ -783,8 +783,8 @@ class Connection implements DriverConnection
             $result = $this->_conn->exec($query);
         }
 
-        if ($hasLogger) {
-            $this->_config->getSQLLogger()->stopQuery();
+        if ($logger) {
+            $logger->stopQuery();
         }
 
         return $result;
@@ -799,7 +799,19 @@ class Connection implements DriverConnection
     public function exec($statement)
     {
         $this->connect();
-        return $this->_conn->exec($statement);
+
+        $logger = $this->_config->getSQLLogger();
+        if ($logger) {
+            $logger->startQuery($statement);
+        }
+
+        $result = $this->_conn->exec($statement);
+
+        if ($logger) {
+            $logger->stopQuery();
+        }
+
+        return $result;
     }
 
     /**
