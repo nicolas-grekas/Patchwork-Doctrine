@@ -44,7 +44,7 @@ final class DocParser
      *
      * @var array
      */
-    private static $classIdentifiers = array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL);
+    protected static $classIdentifiers = array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL);
 
     /**
      * The lexer.
@@ -65,7 +65,7 @@ final class DocParser
      *
      * @var Doctrine\Common\Annotations\DocParser
      */
-    private static $metadataParser;
+    protected static $metadataParser;
 
     /**
      * Flag to control if the current annotation is nested or not.
@@ -123,7 +123,7 @@ final class DocParser
      * Hash-map for caching annotation metadata
      * @var array
      */
-    private static $annotationMetadata = array(
+    protected static $annotationMetadata = array(
         'Doctrine\Common\Annotations\Annotation\Target' => array(
             'is_annotation'    => true,
             'has_constructor'  => true,
@@ -194,7 +194,7 @@ final class DocParser
      *
      * @var array
      */
-    private static $typeMap = array(
+    protected static $typeMap = array(
         'float'     => 'double',
         'bool'      => 'boolean',
         // allow uppercase Boolean in honor of George Boole

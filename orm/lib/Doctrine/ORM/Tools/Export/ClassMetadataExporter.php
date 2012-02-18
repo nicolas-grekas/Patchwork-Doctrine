@@ -37,7 +37,7 @@ use Doctrine\ORM\Tools\Export\ExportException,
  */
 class ClassMetadataExporter
 {
-    private static $_exporterDrivers = array(
+    protected static $_exporterDrivers = array(
         'xml' => 'Doctrine\ORM\Tools\Export\Driver\XmlExporter',
         'yaml' => 'Doctrine\ORM\Tools\Export\Driver\YamlExporter',
         'yml' => 'Doctrine\ORM\Tools\Export\Driver\YamlExporter',

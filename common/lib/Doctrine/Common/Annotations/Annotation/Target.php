@@ -39,7 +39,7 @@ final class Target
     /**
      * @var array
      */
-    private static $map = array(
+    protected static $map = array(
         'ALL'         => self::TARGET_ALL,
         'CLASS'       => self::TARGET_CLASS,
         'METHOD'      => self::TARGET_METHOD,

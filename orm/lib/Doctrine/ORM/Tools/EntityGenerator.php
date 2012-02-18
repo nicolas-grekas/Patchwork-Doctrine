@@ -86,7 +86,7 @@ class EntityGenerator
     /** Whether or not to re-generate entity class if it exists already */
     private $_regenerateEntityIfExists = false;
 
-    private static $_classTemplate =
+    protected static $_classTemplate =
 '<?php
 
 <namespace>
@@ -99,7 +99,7 @@ use Doctrine\ORM\Mapping as ORM;
 <entityBody>
 }';
 
-    private static $_getMethodTemplate =
+    protected static $_getMethodTemplate =
 '/**
  * <description>
  *
@@ -110,7 +110,7 @@ public function <methodName>()
 <spaces>return $this-><fieldName>;
 }';
 
-    private static $_setMethodTemplate =
+    protected static $_setMethodTemplate =
 '/**
  * <description>
  *
@@ -123,7 +123,7 @@ public function <methodName>(<methodTypeHint>$<variableName><variableDefault>)
 <spaces>return $this;
 }';
 
-    private static $_addMethodTemplate =
+    protected static $_addMethodTemplate =
 '/**
  * <description>
  *
@@ -134,7 +134,7 @@ public function <methodName>(<methodTypeHint>$<variableName>)
 <spaces>$this-><fieldName>[] = $<variableName>;
 }';
 
-    private static $_lifecycleCallbackMethodTemplate =
+    protected static $_lifecycleCallbackMethodTemplate =
 '/**
  * @<name>
  */
@@ -143,7 +143,7 @@ public function <methodName>()
 <spaces>// Add your code here
 }';
 
-    private static $_constructorMethodTemplate =
+    protected static $_constructorMethodTemplate =
 'public function __construct()
 {
 <spaces><collections>

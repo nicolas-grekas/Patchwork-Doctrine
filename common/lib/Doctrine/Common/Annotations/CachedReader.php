@@ -29,7 +29,7 @@ use Doctrine\Common\Cache\Cache;
  */
 final class CachedReader implements Reader
 {
-    private static $CACHE_SALT = '@[Annot]';
+    protected static $CACHE_SALT = '@[Annot]';
 
     /**
      * @var Reader

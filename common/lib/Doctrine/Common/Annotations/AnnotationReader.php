@@ -42,7 +42,7 @@ final class AnnotationReader implements Reader
      *
      * @var array
      */
-    private static $globalImports = array(
+    protected static $globalImports = array(
         'ignoreannotation' => 'Doctrine\Common\Annotations\Annotation\IgnoreAnnotation',
     );
 
@@ -53,7 +53,7 @@ final class AnnotationReader implements Reader
      *
      * @var array
      */
-    private static $globalIgnoredNames = array(
+    protected static $globalIgnoredNames = array(
         'access'=> true, 'author'=> true, 'copyright'=> true, 'deprecated'=> true,
         'example'=> true, 'ignore'=> true, 'internal'=> true, 'link'=> true, 'see'=> true,
         'since'=> true, 'tutorial'=> true, 'version'=> true, 'package'=> true,

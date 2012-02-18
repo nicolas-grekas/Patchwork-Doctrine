@@ -35,7 +35,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class Parser
 {
     /** READ-ONLY: Maps BUILT-IN string function names to AST class names. */
-    private static $_STRING_FUNCTIONS = array(
+    protected static $_STRING_FUNCTIONS = array(
         'concat'    => 'Doctrine\ORM\Query\AST\Functions\ConcatFunction',
         'substring' => 'Doctrine\ORM\Query\AST\Functions\SubstringFunction',
         'trim'      => 'Doctrine\ORM\Query\AST\Functions\TrimFunction',
@@ -45,7 +45,7 @@ class Parser
     );
 
     /** READ-ONLY: Maps BUILT-IN numeric function names to AST class names. */
-    private static $_NUMERIC_FUNCTIONS = array(
+    protected static $_NUMERIC_FUNCTIONS = array(
         'length'    => 'Doctrine\ORM\Query\AST\Functions\LengthFunction',
         'locate'    => 'Doctrine\ORM\Query\AST\Functions\LocateFunction',
         'abs'       => 'Doctrine\ORM\Query\AST\Functions\AbsFunction',
@@ -58,7 +58,7 @@ class Parser
     );
 
     /** READ-ONLY: Maps BUILT-IN datetime function names to AST class names. */
-    private static $_DATETIME_FUNCTIONS = array(
+    protected static $_DATETIME_FUNCTIONS = array(
         'current_date'      => 'Doctrine\ORM\Query\AST\Functions\CurrentDateFunction',
         'current_time'      => 'Doctrine\ORM\Query\AST\Functions\CurrentTimeFunction',
         'current_timestamp' => 'Doctrine\ORM\Query\AST\Functions\CurrentTimestampFunction',

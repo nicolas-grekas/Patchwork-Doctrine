@@ -60,7 +60,7 @@ abstract class PersistentObject implements ObjectManagerAware
     /**
      * @var ObjectManager
      */
-    private static $objectManager;
+    protected static $objectManager;
 
     /**
      * @var ClassMetadata

@@ -320,7 +320,7 @@ class ProxyFactory
     }
 
     /** Proxy class code template */
-    private static $_proxyClassTemplate =
+    protected static $_proxyClassTemplate =
 '<?php
 
 namespace <namespace>;

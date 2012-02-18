@@ -42,7 +42,7 @@ class EventArgs
      * @var EventArgs Single instance of EventArgs
      * @static
      */
-    private static $_emptyEventArgsInstance;
+    protected static $_emptyEventArgsInstance;
 
     /**
      * Gets the single, empty and immutable EventArgs instance.
