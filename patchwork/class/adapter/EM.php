@@ -17,7 +17,7 @@ class adapter_EM extends adapter_DB
 
     static function connect($dsn)
     {
-        empty($dsn) or $dsn = self::getDefaultDsn();
+        empty($dsn) and $dsn = self::getDefaultDsn();
         $h = md5(serialize($dsn), true);
         if (isset(self::$em[$h])) return self::$em[$h];
 

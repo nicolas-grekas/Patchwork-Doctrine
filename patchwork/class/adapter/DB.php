@@ -17,7 +17,7 @@ class adapter_DB
 
     static function connect($dsn)
     {
-        empty($dsn) or $dsn = self::getDefaultDsn();
+        empty($dsn) and $dsn = self::getDefaultDsn();
         $h = md5(serialize($dsn), true);
         if (isset(self::$db[$h])) return self::$db[$h];
 
@@ -37,7 +37,7 @@ class adapter_DB
         static $defaultDsn;
 
         isset($defaultDsn) or $defaultDsn = array(
-            'driver' => $CONFIG['doctrine.pdo_mysql'],
+            'driver' => $CONFIG['doctrine.driver'],
             'host' => $CONFIG['doctrine.host'],
             'dbname' => $CONFIG['doctrine.dbname'],
             'user' => $CONFIG['doctrine.user'],
