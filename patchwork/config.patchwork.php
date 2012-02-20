@@ -14,6 +14,8 @@ $CONFIG += array(
     'doctrine.proxy.generate' => true, // Set to false to production env
 //    'doctrine.dbal.logger' => 'Doctrine\DBAL\Logger\PatchworkSQLLogger',
     'doctrine.event.listeners' => array(),
+
+    'pForm.date.toDateTime' => false,
 );
 
 

@@ -22,7 +22,7 @@ class adapter_EM extends adapter_DB
         if (isset(self::$em[$h])) return self::$em[$h];
 
         return self::$em[$h] = \Doctrine\ORM\EntityManager::create(
-            DB($dsn),
+            adapter_DB::connect($dsn),
             self::createConfiguration($dsn)
         );
     }
