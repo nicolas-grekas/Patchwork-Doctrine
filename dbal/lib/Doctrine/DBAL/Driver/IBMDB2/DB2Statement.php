@@ -35,7 +35,7 @@ class DB2Statement implements \IteratorAggregate, Statement
      * DB2_BINARY, DB2_CHAR, DB2_DOUBLE, or DB2_LONG
      * @var array
      */
-    static private $_typeMap = array(
+    static protected $_typeMap = array(
         \PDO::PARAM_INT => DB2_LONG,
         \PDO::PARAM_STR => DB2_CHAR,
     );
