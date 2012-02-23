@@ -26,17 +26,17 @@ final class AnnotationRegistry
 
     static public function registerAutoloadNamespace($namespace, $dirs = null)
     {
-        user_error(__METHOD__ . "() is disabled and replaced by Patchwork's autoloader", E_USER_WARNING);
+        user_error(__METHOD__ . "() is disabled and replaced by Patchwork's autoloader", E_USER_NOTICE);
     }
 
     static public function registerAutoloadNamespaces(array $namespaces)
     {
-        user_error(__METHOD__ . "() is disabled and replaced by Patchwork's autoloader", E_USER_WARNING);
+        user_error(__METHOD__ . "() is disabled and replaced by Patchwork's autoloader", E_USER_NOTICE);
     }
 
     static public function registerLoader($callabale)
     {
-        user_error(__METHOD__ . "() is disabled and replaced by Patchwork's autoloader", E_USER_WARNING);
+        user_error(__METHOD__ . "() is disabled and replaced by Patchwork's autoloader", E_USER_NOTICE);
     }
 
     static public function loadAnnotationClass($class)

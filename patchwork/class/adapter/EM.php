@@ -35,8 +35,8 @@ class adapter_EM extends adapter_DB
 
         $conf->setQueryCacheImpl($cache);
         $conf->setMetadataCacheImpl($cache);
-        $conf->setMetadataDriverImpl($conf->newDefaultAnnotationDriver(array($CONFIG['doctrine.entities.dir'])));
-        $conf->setProxyDir($CONFIG['doctrine.proxy.dir']);
+        $conf->setMetadataDriverImpl($conf->newDefaultAnnotationDriver(array(patchworkPath($CONFIG['doctrine.entities.dir']))));
+        $conf->setProxyDir(patchworkPath($CONFIG['doctrine.proxy.dir']));
         $conf->setAutoGenerateProxyClasses($CONFIG['doctrine.proxy.generate']);
         $conf->setProxyNamespace($CONFIG['doctrine.proxy.namespace']);
 

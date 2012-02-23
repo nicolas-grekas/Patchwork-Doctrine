@@ -8,7 +8,6 @@ $CONFIG += array(
     'doctrine.password' => 'password',
 
     'doctrine.cache' => 'Doctrine\Common\Cache\ArrayCache', // Use ApcCache for production env
-    'doctrine.mapping.dir' => 'data/mapping',
     'doctrine.entities.dir' => 'class/Entities',
     'doctrine.proxy.dir' => 'class/Proxies',
     'doctrine.proxy.generate' => true, // Set to false to production env
