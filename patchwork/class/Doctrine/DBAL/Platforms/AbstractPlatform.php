@@ -15,6 +15,9 @@ namespace Doctrine\DBAL\Platforms;
 
 abstract class AbstractPlatform extends self
 {
+    protected $identifierQuoteCharacter;
+
+
     /**
      * Quotes its arguments as identifiers.
      *
@@ -22,25 +25,41 @@ abstract class AbstractPlatform extends self
      */
     public function quoteArgsAsIdentifiers()
     {
-        static $quoteChar;
-        isset($quoteChar) or $quoteChar = substr($this->quoteSingleIdentifier('_'), 0, 1);
-
         $a = func_get_args();
+
+        if (isset($this->identifierQuoteCharacter))
+        {
+            $q = $this->identifierQuoteCharacter;
+        }
+        else
+        {
+            $q = $this->quoteSingleIdentifier('q');
+            $q = $this->identifierQuoteCharacter = $q[0];
+        }
 
         foreach ($a as &$data)
         {
             if (is_string($data))
             {
-                if (isset($data[0]) && $quoteChar !== $data[0]) $data = $this->quoteIdentifier($data);
+                if (isset($data[0]) && $q !== $data[0])
+                {
+                    $data = $this->quoteIdentifier($data);
+                }
             }
             else
             {
                 $quotedData = array();
+
                 foreach ($data as $k => $v)
                 {
-                    if (isset($k[0]) && $quoteChar !== $k[0]) $k = $this->quoteIdentifier($k);
+                    if (isset($k[0]) && $q !== $k[0])
+                    {
+                        $k = $this->quoteIdentifier($k);
+                    }
+
                     $quotedData[$k] = $v;
                 }
+
                 $data = $quotedData;
             }
         }
