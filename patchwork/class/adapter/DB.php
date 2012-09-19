@@ -14,7 +14,7 @@ class adapter_DB
 
     static function connect($dsn)
     {
-        empty($dsn) and $dsn = self::getDefaultDsn();
+        $dsn += self::getDefaultDsn();
         $h = md5(serialize($dsn), true);
         if (isset(self::$db[$h])) return self::$db[$h];
 
@@ -24,7 +24,6 @@ class adapter_DB
             self::createEventManager($dsn)
         );
         $db->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-        $db->setCharset('utf8');
 
         return self::$db[$h] = $db;
     }
@@ -39,6 +38,7 @@ class adapter_DB
             'dbname' => $CONFIG['doctrine.dbname'],
             'user' => $CONFIG['doctrine.user'],
             'password' => $CONFIG['doctrine.password'],
+            'charset' => 'UTF8',
         );
 
         return $defaultDsn;
