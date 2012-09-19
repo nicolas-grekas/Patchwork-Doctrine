@@ -21,7 +21,7 @@ $CONFIG += array(
 /**
  * @return \Doctrine\ORM\EntityManager
  */
-function EM($dsn = null)
+function EM($dsn = array())
 {
     return adapter_EM::connect($dsn);
 }
@@ -29,7 +29,7 @@ function EM($dsn = null)
 /**
  * @return \Doctrine\DBAL\Connection
  */
-function DB($dsn = null)
+function DB($dsn = array())
 {
     return adapter_DB::connect($dsn);
 }
