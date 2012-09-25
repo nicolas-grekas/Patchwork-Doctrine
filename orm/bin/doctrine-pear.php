@@ -1,7 +1,5 @@
 <?php
 /*
- *  $Id$
- *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -16,35 +14,37 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\ORM\Query\AST;
+require_once 'Doctrine/Common/ClassLoader.php';
 
-/**
- * JoinVariableDeclaration ::= Join [IndexBy]
- *
- * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    www.doctrine-project.org
- * @since   2.0
- * @version $Revision: 3938 $
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
- */
-class JoinVariableDeclaration extends Node
-{
-    public $join = null;
-    public $indexBy = null;
+$classLoader = new \Doctrine\Common\ClassLoader('Doctrine');
+$classLoader->register();
 
-    public function __construct($join, $indexBy)
-    {
-        $this->join = $join;
-        $this->indexBy = $indexBy;
+$classLoader = new \Doctrine\Common\ClassLoader('Symfony');
+$classLoader->register();
+
+$configFile = getcwd() . DIRECTORY_SEPARATOR . 'cli-config.php';
+
+$helperSet = null;
+if (file_exists($configFile)) {
+    if ( ! is_readable($configFile)) {
+        trigger_error(
+            'Configuration file [' . $configFile . '] does not have read permission.', E_ERROR
+        );
     }
 
-    public function dispatch($sqlWalker)
-    {
-        return $sqlWalker->walkJoinVariableDeclaration($this);
+    require $configFile;
+
+    foreach ($GLOBALS as $helperSetCandidate) {
+        if ($helperSetCandidate instanceof \Symfony\Component\Console\Helper\HelperSet) {
+            $helperSet = $helperSetCandidate;
+            break;
+        }
     }
 }
+
+$helperSet = ($helperSet) ?: new \Symfony\Component\Console\Helper\HelperSet();
+
+\Doctrine\ORM\Tools\Console\ConsoleRunner::run($helperSet);
