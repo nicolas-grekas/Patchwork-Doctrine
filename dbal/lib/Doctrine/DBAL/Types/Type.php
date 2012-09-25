@@ -147,7 +147,8 @@ abstract class Type
             if ( ! isset(self::$_typesMap[$name])) {
                 throw DBALException::unknownColumnType($name);
             }
-            self::$_typeObjects[$name] = new self::$_typesMap[$name]();
+            $class = self::$_typesMap[$name];
+            self::$_typeObjects[$name] = new $class();
         }
 
         return self::$_typeObjects[$name];
