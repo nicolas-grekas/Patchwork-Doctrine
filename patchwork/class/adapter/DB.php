@@ -68,6 +68,14 @@ class adapter_DB
             }
         }
 
+/**/    if (PHP_VERSION_ID < 50306)
+/**/    {
+            if ('pdo_mysql' === $dsn['driver'])
+            {
+                $evm->addEventSubscriber(new \Doctrine\DBAL\Event\Listeners\MysqlSessionInit($dsn['charset']));
+            }
+/**/    }
+
         return $evm;
     }
 
