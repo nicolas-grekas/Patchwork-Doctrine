@@ -64,7 +64,7 @@ class SQLSrvStatement implements IteratorAggregate, Statement
      *
      * @var array
      */
-    private static $fetchMap = array(
+    protected static $fetchMap = array(
         PDO::FETCH_BOTH => SQLSRV_FETCH_BOTH,
         PDO::FETCH_ASSOC => SQLSRV_FETCH_ASSOC,
         PDO::FETCH_NUM => SQLSRV_FETCH_NUMERIC,
