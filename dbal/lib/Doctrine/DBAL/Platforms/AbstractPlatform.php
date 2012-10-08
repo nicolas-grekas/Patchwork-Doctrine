@@ -768,7 +768,8 @@ abstract class AbstractPlatform
      */
     public function getConcatExpression()
     {
-        return join(' || ' , func_get_args());
+        $args = func_get_args();
+        return join(' || ' , $args);
     }
 
     /**

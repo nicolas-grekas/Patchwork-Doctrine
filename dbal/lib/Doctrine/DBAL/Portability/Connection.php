@@ -113,7 +113,8 @@ class Connection extends \Doctrine\DBAL\Connection
     {
         $this->connect();
 
-        $stmt = call_user_func_array(array($this->_conn, 'query'), func_get_args());
+        $args = func_get_args();
+        $stmt = call_user_func_array(array($this->_conn, 'query'), $args);
         return new Statement($stmt, $this);
     }
 }

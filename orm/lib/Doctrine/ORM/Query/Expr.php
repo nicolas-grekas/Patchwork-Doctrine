@@ -254,7 +254,8 @@ class Expr
      */
     public function countDistinct($x)
     {
-        return 'COUNT(DISTINCT ' . implode(', ', func_get_args()) . ')';
+        $args = func_get_args();
+        return 'COUNT(DISTINCT ' . implode(', ', $args) . ')';
     }
 
     /**

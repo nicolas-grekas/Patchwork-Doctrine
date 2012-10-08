@@ -681,7 +681,8 @@ class QueryBuilder
     public function where($predicates)
     {
         if ( ! (func_num_args() == 1 && $predicates instanceof CompositeExpression) ) {
-            $predicates = new CompositeExpression(CompositeExpression::TYPE_AND, func_get_args());
+            $args = func_get_args();
+            $predicates = new CompositeExpression(CompositeExpression::TYPE_AND, $args);
         }
 
         return $this->add('where', $predicates);
@@ -810,7 +811,8 @@ class QueryBuilder
     public function having($having)
     {
         if ( ! (func_num_args() == 1 && $having instanceof CompositeExpression)) {
-            $having = new CompositeExpression(CompositeExpression::TYPE_AND, func_get_args());
+            $args = func_get_args();
+            $having = new CompositeExpression(CompositeExpression::TYPE_AND, $args);
         }
 
         return $this->add('having', $having);

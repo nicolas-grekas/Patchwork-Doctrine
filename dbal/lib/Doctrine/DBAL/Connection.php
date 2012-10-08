@@ -741,7 +741,7 @@ class Connection implements DriverConnection
         try {
             $statement = call_user_func_array(array($this->_conn, 'query'), $args);
         } catch (\Exception $ex) {
-            throw DBALException::driverExceptionDuringQuery($ex, func_get_arg(0));
+            throw DBALException::driverExceptionDuringQuery($ex, $args[0]);
         }
 
         $statement->setFetchMode($this->_defaultFetchMode);
