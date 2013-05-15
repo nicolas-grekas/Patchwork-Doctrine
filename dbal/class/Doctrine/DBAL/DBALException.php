@@ -55,7 +55,7 @@ class DBALException extends \Patchwork\PHP\Shim\Exception
      *
      * @return string
      */
-    private static function formatParameters(array $params)
+    protected static function formatParameters(array $params)
     {
         return '[' . implode(', ', array_map(function($param) {
             $json = @json_encode($param);

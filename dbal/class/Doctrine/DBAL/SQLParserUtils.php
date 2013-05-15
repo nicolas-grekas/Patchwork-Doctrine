@@ -193,7 +193,7 @@ class SQLParserUtils
      * @param string $statement
      * @return array
      */
-    static private function getUnquotedStatementFragments($statement)
+    static protected function getUnquotedStatementFragments($statement)
     {
         $literal = self::ESCAPED_SINGLE_QUOTED_TEXT . '|' . self::ESCAPED_DOUBLE_QUOTED_TEXT;
         preg_match_all("/([^'\"]+)(?:$literal)?/s", $statement, $fragments, PREG_OFFSET_CAPTURE);
@@ -210,7 +210,7 @@ class SQLParserUtils
      * @throws SQLParserUtilsException
      * @return mixed
      */
-    static private function extractParam($paramName, $paramsOrTypes, $isParam, $defaultValue = null)
+    static protected function extractParam($paramName, $paramsOrTypes, $isParam, $defaultValue = null)
     {
         if (isset($paramsOrTypes[$paramName])) {
             return $paramsOrTypes[$paramName];
