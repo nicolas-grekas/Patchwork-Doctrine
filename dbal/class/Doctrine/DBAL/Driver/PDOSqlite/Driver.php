@@ -60,8 +60,6 @@ class Driver implements \Doctrine\DBAL\Driver
         );
 
         foreach ($this->_userDefinedFunctions as $fn => $data) {
-/**/        if (PHP_VERSION_ID < 50300)
-                is_array($data['callback']) and $data['callback'][0] = str_replace('\\', '_', ltrim($data['callback'][0], '\\'));
             $pdo->sqliteCreateFunction($fn, $data['callback'], $data['numArgs']);
         }
 

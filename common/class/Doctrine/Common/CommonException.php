@@ -24,5 +24,5 @@ namespace Doctrine\Common;
  * @author heinrich
  *
  */
-class CommonException extends \Patchwork\PHP\Shim\Exception {
+class CommonException extends \Exception {
 }

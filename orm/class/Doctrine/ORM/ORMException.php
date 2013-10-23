@@ -27,7 +27,7 @@ use Exception;
  * @author Roman Borschel <roman@code-factory.org>
  * @since 2.0
  */
-class ORMException extends \Patchwork\PHP\Shim\Exception
+class ORMException extends Exception
 {
     public static function missingMappingDriverImpl()
     {

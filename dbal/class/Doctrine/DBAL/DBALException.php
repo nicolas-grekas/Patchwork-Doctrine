@@ -2,7 +2,7 @@
 
 namespace Doctrine\DBAL;
 
-class DBALException extends \Patchwork\PHP\Shim\Exception
+class DBALException extends \Exception
 {
     public static function notSupported($method)
     {
